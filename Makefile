@@ -7,12 +7,17 @@ help:
 	@echo "  make install             - Install dependencies"
 	@echo "  make test                - Run api tests"
 	@echo "  make clean               - Clean project"
+	@echo "  make report              - ope report.html in browser"
 
 install:
 	pip3 install -r requirements.txt
 
 test:
 	sh -c 'pytest tests --html=report.html -s'
+
+report:
+	@echo "Opening report.html in browser..."
+	open report.html || start report.html
 
 clean:
 	rm -rf .pytest_cache/
