@@ -1,6 +1,7 @@
 import pytest
 from dataclasses import dataclass
 import requests
+import os
 import json
 
 @dataclass()
@@ -9,9 +10,10 @@ class Config():
     Configuration class for pytest fixtures.
     This class can be used to define configuration parameters and utility funtion for the test suite.
     """
-    # Add any configuration parameters you need here
-    BASE_URL: str = "http://localhost:8080/api/v3/user"
-
+    # Base URL and end point for the user API
+    BASE_URL: str = os.getenv("BASE_URL", "http://localhost:8080/api/v3")
+    USER_ENDPOINT: str = "user"
+ 
 @pytest.fixture(scope="function")
 def test_config():
     """
@@ -44,7 +46,8 @@ def create_user(user_payload, test_config):
     Fixture to provide a function for creating a user.
     """
     def _create_user():
-        response = requests.post(test_config.BASE_URL, json=user_payload)
+        url = f"{test_config.BASE_URL}/{test_config.USER_ENDPOINT}"
+        response = requests.post(url, json=user_payload)
         return response
 
     return _create_user
@@ -55,7 +58,8 @@ def login_user(test_config):
     Fixture to provide a function for logging in a user.
     """
     def _login_user(username, password):
-        response = requests.get(test_config.BASE_URL + "/login"+f"?username={username}&password={password}")
+        url = f"{test_config.BASE_URL}/{test_config.USER_ENDPOINT}/login?username={username}&password={password}"
+        response = requests.get(url)
         return response
 
     return _login_user
@@ -65,8 +69,9 @@ def get_user(test_config):
     """
     Fixture to provide a function for getting a user.
     """
-    def _get_user(user_id):
-        response = requests.get(test_config.BASE_URL + f"/{user_id}")
+    def _get_user(user_name):
+        url = f"{test_config.BASE_URL}/{test_config.USER_ENDPOINT}/{user_name}"
+        response = requests.get(url)
         return response
 
     return _get_user
@@ -76,8 +81,9 @@ def update_user(test_config):
     """
     Fixture to provide a function for updating a user.
     """
-    def _update_user(user_id, user_payload):
-        response = requests.put(test_config.BASE_URL + f"/{user_id}", json=user_payload)
+    def _update_user(user_name, user_payload):
+        url = f"{test_config.BASE_URL}/{test_config.USER_ENDPOINT}/{user_name}"
+        response = requests.put(url, json=user_payload)
         return response
 
     return _update_user
@@ -88,7 +94,8 @@ def delete_user(test_config):
     Fixture to provide a function for deleting a user.
     """
     def _delete_user(user_name):
-        response = requests.delete(test_config.BASE_URL + f"/{user_name}")
+        url = f"{test_config.BASE_URL}/{test_config.USER_ENDPOINT}/{user_name}"
+        response = requests.delete(url)
         return response
 
     return _delete_user
@@ -99,7 +106,8 @@ def logout_user(test_config):
     Fixture to provide a function for logging out a user.
     """
     def _logout_user():
-        response = requests.get(f"{test_config.BASE_URL}/logout")
+        url = f"{test_config.BASE_URL}/{test_config.USER_ENDPOINT}/logout"
+        response = requests.get(url)
         return response
 
     return _logout_user
