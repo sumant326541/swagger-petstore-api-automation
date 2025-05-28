@@ -84,7 +84,7 @@ make report
  Easy to maintain data driven test
 
  ### Pytest framework
- Very eassy to start test execution 
+ Easy to start test execution 
  different marker to controll and skip test
  Customize test discovery, execution, logging, or reporting via hook functions 
  Generate reports, run tests in parallel, and integration with CI/CD

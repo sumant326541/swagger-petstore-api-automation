@@ -2,7 +2,8 @@
 PYTHON_VERSION = 3.13.3
 VENV_DIR = .venv
 
-.PHONY: help all install test clean
+.PHONY: help all install test clean report \
+	docker-build docker-up docker-test docker-stop docker-start docker-clean docker-logs
 
 help:
 	@echo "Available commands:"
