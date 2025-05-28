@@ -1,10 +1,14 @@
 # Makefile for swagger petstore api automation
+PYTHON_VERSION = 3.13.3
+VENV_DIR = .venv
 
-.PHONY: help install test clean
+.PHONY: help all install test clean
 
 help:
 	@echo "Available commands:"
-	@echo "  make install             - Install dependencies"
+	@echo "  make help                - Show this help message"
+	@echo "  make all                 - Install python dependencies and set up environment"
+	@echo "  make install             - Install only dependencies"
 	@echo "  make test                - Run api tests"
 	@echo "  make clean               - Clean project"
 	@echo "  make report              - ope report.html in browser"
@@ -16,6 +20,20 @@ help:
 	@echo "  make docker-clean        - Stop all services and remove containers"
 	@echo "  make docker-logs		  - Show logs of all services"
 
+
+all:
+	brew update
+	brew install pyenv || true
+	export PYENV_ROOT="$$HOME/.pyenv"; \
+	export PATH="$$PYENV_ROOT/bin:$$PATH"; \
+	eval "$$(pyenv init --path)"; \
+	eval "$$(pyenv init -)"; \
+	pyenv install -s $(PYTHON_VERSION); \
+	pyenv global $(PYTHON_VERSION); \
+	python3 -m venv $(VENV_DIR); \
+	. $(VENV_DIR)/bin/activate; \
+	pip install -r requirements.txt; \
+	python --version
 
 install:
 	pip3 install -r requirements.txt
